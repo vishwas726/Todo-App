@@ -352,8 +352,10 @@ const page = () => {
 
                                         <div className="flex justify-end  gap-6">
                                               <div className="flex gap-2 items-center">
-                                          <input type="checkbox" name="" id="" checked={item.status=="Completed"} onChange={()=>onChangeStatus(item)} />
-                                            <p >Mark as Completed</p>
+                                          <input type="checkbox" name="status" id="" checked={item.status=="Completed"} onChange={()=>onChangeStatus(item)} />
+                                           
+
+                                            <label htmlFor="status">Mark as Completed</label>
 </div>
                                             <MdOutlineDelete className='text-red-500 text-[1.6rem] cursor-pointer' onClick={() => onDelete(item._id)} />
                                             <CiEdit className='text-green-500 text-[1.9rem] cursor-pointer' onClick={() => onEdit(item)} />
