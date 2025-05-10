@@ -184,7 +184,7 @@ const page = () => {
                         <div className="flex flex-col-reverse flex-wrap shrink-0 gap-10 w-full p-4 ">
 
 
-                            {showEditBox && <div className="EditBox overflow-hidden fixed left-0 top-0  flex h-[100vh] justify-center items-center w-full  bg-[#000000b9]">
+                            {showEditBox && <div className="EditBox p-4 overflow-hidden fixed left-0 top-0  flex h-[100vh] justify-center items-center w-full  bg-[#000000b9]">
 
                                 <div className="bg-white max-w-full p-6  w-[800px] rounded-lg">
 
