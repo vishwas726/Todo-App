@@ -28,7 +28,7 @@ body {
 
 .ToTop{
 
-animation: moveTop .7s ease alternate;
+animation: moveTop .6s ease alternate;
 
 
 }
@@ -36,13 +36,14 @@ animation: moveTop .7s ease alternate;
 @keyframes moveTop {
  
   from{
+    opacity: 0;
     
     transform: translateY(-20px);
 
   }
 
   to{
-
+ opacity: 1;
     transform: translateY(0px);
 
 

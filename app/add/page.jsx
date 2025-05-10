@@ -21,7 +21,8 @@ const page = () => {
         tags: "",
         description: "",
         language: "",
-        title: ""
+        title: "",
+        status:"Pending"
 
     })
 
@@ -35,8 +36,6 @@ const page = () => {
 
     })
 
-
-    const [languageDrop, setLanguageDrop] = useState(false)
 
     const onSubmit = () => {
 

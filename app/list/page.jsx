@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
-import { MdAddRoad, MdOutlineDelete } from "react-icons/md";
+import { MdAddRoad, MdKeyboardArrowUp, MdOutlineDelete } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import Link from 'next/link';
 
@@ -11,6 +11,11 @@ const page = () => {
 
     const [data, setData] = useState([])
     const [editTaskId, setEditTaskId] = useState("")
+    const [optionsFilter, setOptionsFilter] = useState("All");
+    
+    const [optionsFilterDrop, setOptionsFilterDrop] = useState(false);
+
+  
 
     useEffect(() => {
 
@@ -25,10 +30,31 @@ const page = () => {
 
         let newData = [...prevArr];
 
+
+
+        if (optionsFilter == "Completed") {
+
+            newData = newData.filter((item) => item.status == "Completed")
+
+
+        } else if (optionsFilter == "Pending") {
+
+
+            newData = newData.filter((item) => item.status == "Pending")
+
+        }
+
+
         setData(newData)
 
 
-    }, [])
+    }, [optionsFilter])
+
+
+
+
+
+
 
 
 
@@ -89,6 +115,32 @@ const page = () => {
         setEditTaskId(item._id)
         console.log(editTaskId)
         setShowEditBox(true);
+
+    }
+
+    const onChangeStatus = (task) => {
+
+        let newStatus=task.status=="Completed"? "Pending" : "Completed";
+        
+        const prevData=localStorage.getItem("data");
+
+        let prevArr=[]
+
+        if(prevData){
+
+             prevArr=JSON.parse(prevData)
+
+        }
+
+       prevArr= prevArr.filter((item)=>item._id !=task._id)
+         
+       let newArr=[...prevArr, {...task, status:newStatus}] 
+
+       
+
+       localStorage.setItem("data",JSON.stringify(newArr) );
+
+       setData(newArr)
 
     }
 
@@ -168,7 +220,20 @@ const page = () => {
 
                     {/* <Navbar /> */}
                     <div className=" shadow pb-52 mt-10 rounded-2xl mx-4 overflow-hidden">
-                        <div className="h-[100px] mt- 10 bg-gradient-to-r from-blue-400 to-orange-200 w-full flex items-center justify-end p-4">
+                        <div className="h-[100px] flex-row-reverse mt- 10 bg-gradient-to-r from-blue-400 to-orange-200 w-full flex items-center justify-between p-4">
+
+                            <div onClick={()=>setOptionsFilterDrop(!optionsFilterDrop)} className="bg-white me-10 text-[14px] text-gray-600 relative w-fit p-2 justify-center  transition-all duration-200 cursor-pointer  rounded-lg flex gap-3 items-center">
+                                  
+                                  <p className='text-gray-600'>{optionsFilter}</p>
+                                  <MdKeyboardArrowUp className={`${optionsFilterDrop?"":"rotate-180"} transition-all duration-200`} />   
+                                   
+                                   <div className={`absolute ${optionsFilterDrop ? "block ToTop" : "hidden"} space-y-3 shadow  bg-white p-3 rounded-lg text-center   top-11`}>
+                                        <p className={`${optionsFilter=="All"? "bg-slate-100":""} hover:bg-slate-100 p-2 text-gray-600 rounded-xl`} onClick={()=>setOptionsFilter("All")}>All</p>
+                                        <p className={`${optionsFilter=="Pending"? "bg-slate-100":""} hover:bg-slate-100 p-2 text-gray-600 rounded-xl`} onClick={()=>setOptionsFilter("Pending")}>Pending</p>                                                             
+                                        <p className={`${optionsFilter=="Completed"? "bg-slate-100":""} hover:bg-slate-100 p-2 text-gray-600 rounded-xl`} onClick={()=>setOptionsFilter("Completed")}>Completed</p>
+                                   </div>
+
+                            </div>
 
                             <Link href="/add">
                                 <div className={` text-blue-600 flex sm:hidden gap-2 font-bold py-2 px-2.5  rounded-lg ${"path" == "add" ? "bg-blue-100 text-blue-500" : ""} bg-white  cursor-pointer `}>
@@ -275,20 +340,27 @@ const page = () => {
 
                                 data.map((item, index) => (
 
-                                    <div className="w-full  capitalize space-y-6 g rid gap-4 h-fit   gri d-cols-4  text-start bg-slate-50 p-4 rounded-lg " key={item._id}>
+                                    <div className={`w-full   capitalize space-y-6 g rid gap-4 h-fit   gri d-cols-4  text-start bg-slate-50 p-4 rounded-lg `} key={item._id}>
 
-                                        <p className='font-medium text-[1.6rem] '>{item.title}</p>
+                                        <p className={`font-medium text-[1.6rem] ${item.status=="Completed"?"line-through":""}`}>{item.title}</p>
                                         <p className='rounded-xl bg-[#ffffff] shadow px-2 py-1.5 w-fit'>{item.tags}</p>
                                         {/* <p className='rounded-xl bg-[#ffffff] shadow px-2 py-1.5 w-fit'>{item._id}</p> */}
 
                                         <p className='font-medium p-2 h-fit   w-full  outline-none   '>{item.description}</p>
+                                        <p className={`shadow w-fit font-medium p-2 h-fit ${item.status=="Completed"?"bg-green-400":"bg-amber-400"} text-white rounded-xl  outline-none   `}>{item.status}</p>
+
 
                                         <div className="flex justify-end  gap-6">
+                                              <div className="flex gap-2 items-center">
+                                          <input type="checkbox" name="" id="" checked={item.status=="Completed"} onChange={()=>onChangeStatus(item)} />
+                                            <p >Mark as Completed</p>
+</div>
                                             <MdOutlineDelete className='text-red-500 text-[1.6rem] cursor-pointer' onClick={() => onDelete(item._id)} />
                                             <CiEdit className='text-green-500 text-[1.9rem] cursor-pointer' onClick={() => onEdit(item)} />
                                         </div>
 
-
+                                       
+                                          
 
 
                                     </div>
